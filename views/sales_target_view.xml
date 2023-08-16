@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="sales_target_tree_view" model="ir.ui.view">
+        <field name="name">sales.target.tree.view</field>
+        <field name="model">company.target</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="company_id"/>
+                <field name="from_date"/>
+                <field name="to_date"/>
+                <field name="target_qty"/>
+                <field name="target_amount"/>
+
+            </tree>
+        </field>
+    </record>
+
+    <record id="sales_target_form_view" model="ir.ui.view">
+        <field name="name">sales.target.form.view</field>
+        <field name="model">company.target</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_done" string="Mark as done" type="object"/>
+                    <button name="generate" string="Generate" type="object" attrs="{'invisible':[('daily_targets','=',False)]}"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="company_id"/>
+                            <field name="description"/>
+                            <field name="daily_targets"/>
+                        </group>
+                        <group>
+                            <field name="from_date"/>
+                            <field name="to_date"/>
+                            <field name="target_amount"/>
+                            <field name="target_qty"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="POS targets">
+                            <field name="pos_target_ids">
+                                <tree>
+                                    <field name="pos_id"/>
+                                    <field name="target_qty" sum="all_target_qty"/>
+                                    <field name="target_amount" sum="all_target_amount"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="pos_target_form_view" model="ir.ui.view">
+        <field name="name">pos.target.form.view</field>
+        <field name="model">pos.target</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="pos_id"/>
+                            <field name="target_qty"/>
+                            <field name="target_amount"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Employees targets">
+                            <field name="employee_target_ids">
+                                <tree>
+                                    <field name="employee_id"/>
+                                    <field name="target_qty" />
+                                    <field name="target_amount" />
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="employee_target_form_view" model="ir.ui.view">
+        <field name="name">employee.target.form.view</field>
+        <field name="model">employee.target</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="employee_id"/>
+                        </group>
+                        <group>
+                            <field name="target_amount"/>
+                            <field name="target_qty"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="sales_target_action">
+        <field name="name">Sales target</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">company.target</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+            id="sales_target_menu_root"
+            name="Sales Target"
+            web_icon="sales_target,static/description/icon.png"
+            string="Sales Target"
+            groups="base.group_user"
+            sequence="20"/>
+
+    <menuitem id="targets_menu"
+              name="Targets"
+              parent="sales_target_menu_root"
+              action="sales_target_action"/>
+</odoo>
